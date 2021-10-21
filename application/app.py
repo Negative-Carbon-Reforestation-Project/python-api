@@ -1,5 +1,6 @@
 import pandas as pd
-import open_land_map as olm
+
+from models import open_land_map as olm
 
 
 def main():
