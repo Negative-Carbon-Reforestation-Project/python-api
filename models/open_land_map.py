@@ -1,6 +1,7 @@
 import requests
 
 
+
 def get_collections() -> list[str]:
     """
     Gets the collections that are available from OpenLandMap.
