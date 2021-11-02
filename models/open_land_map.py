@@ -1,8 +1,11 @@
 import requests
 
-def some_api_call() -> list[str]:
+
+
+def get_collections() -> list[str]:
     """
-    Documenting makes your trees happier!
-    :return: A list of happy trees
+    Gets the collections that are available from OpenLandMap.
+    :return: Returns a list of the available collections.
     """
-    return ["Happy", "Trees", "2021"]
+    response = requests.get("https://api.openlandmap.org/query/collections")
+    return response.json()
