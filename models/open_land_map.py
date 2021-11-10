@@ -1,4 +1,14 @@
 import requests
+import json
+
+
+def get_collections() -> json:
+    """
+    Gets the collections that are available from OpenLandMap.
+    :return: Returns a list of the available collections.
+    """
+    response = requests.get("https://api.openlandmap.org/query/collections")
+    return response.json()
 
 
 def get_collections():
@@ -17,6 +27,7 @@ def get_layers(collection):
     :returns: If 'collection' is a string, Returns a json file containing the information for the provided layer
     :returns: If 'collection' is empty or not a string, Returns a json containing all layers
     :returns: If 'collection' is a list, a list of json objects is returned
+
     """
     if isinstance(collection, list):
         responses = []
@@ -31,4 +42,13 @@ def get_layers(collection):
     else:
         response = requests.get('https://api.openlandmap.org/query/layers?coll=all')
 
+    return response.json()
+
+
+def get_populate() -> json:
+    """
+    Gets the layers for front-end to populate the menu.
+    :return: Returns a json file containing layer information.
+    """
+    response = requests.get("https://api.openlandmap.org/query/populate")
     return response.json()
