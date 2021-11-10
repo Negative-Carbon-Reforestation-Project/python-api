@@ -1,7 +1,8 @@
 import requests
+import json
 
 
-def get_collections() -> list[str]:
+def get_collections() -> json:
     """
     Gets the collections that are available from OpenLandMap.
     :return: Returns a list of the available collections.
@@ -25,7 +26,7 @@ def get_layers(collection):
     return response.json()
 
 
-def get_populate() -> list[str]:
+def get_populate() -> json:
     """
     Gets the layers for front-end to populate the menu.
     :return: Returns a json file containing layer information.
