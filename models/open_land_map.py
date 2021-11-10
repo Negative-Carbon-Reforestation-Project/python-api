@@ -24,10 +24,9 @@ def get_layers(collection):
     """
     Gets the layers that are available for a given 'collection' or list of 'collection's.
     :param: A string or list that will be appended to the end of query url, used to specify the target collection
-    :returns: If 'collection' is a string, Returns a json file containing the information for the provided layer
-    :returns: If 'collection' is empty or not a string, Returns a json containing all layers
-    :returns: If 'collection' is a list, a list of json objects is returned
-
+    :returns: If 'collection' is a string, Returns a json file containing the information for the provided layer. \
+        If 'collection' is empty or not a string, Returns a json containing all layers. If 'collection' is a list, \
+        a list of json objects is returned
     """
     if isinstance(collection, list):
         responses = []
