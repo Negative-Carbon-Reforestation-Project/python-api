@@ -5,8 +5,11 @@ from models import open_land_map as olm
 
 
 def main():
-    olm_df = pd.DataFrame(olm.some_api_call())
-    print(olm_df.head())
+    # olm_df = pd.DataFrame(olm.some_api_call())
+    # print(olm_df.head())
+
+    layers = olm.get_layers()
+    layers2 = olm.get_layers2()
 
 
 if __name__ == "__main__":
