@@ -1,8 +1,8 @@
 import requests
-import json
+from typing import List, Dict
 
 
-def get_collections() -> json:
+def get_collections() -> List[str]:
     """
     Gets the collections that are available from OpenLandMap.
     :return: Returns a list of the available collections.
@@ -11,7 +11,7 @@ def get_collections() -> json:
     return response.json()
 
 
-def get_layers(collection) -> list[json]:
+def get_layers(collection) -> Dict[str, List[Dict[str, str]]]:
     """
     Gets the layers that are available for a given 'collection' or list of 'collection's.
     :param: A string or list that will be appended to the end of query url, used to specify the target collection
@@ -32,10 +32,15 @@ def get_layers(collection) -> list[json]:
     else:
         response = requests.get('https://api.openlandmap.org/query/layers?coll=all')
 
-    return [response.json()]
+    return response.json()
 
 
-def get_populate() -> json:
+def get_layers2(collection: str = "all") -> Dict[str, List[Dict[str, str]]]:
+    response = requests.get(f"https://api.openlandmap.org/query/layers?coll={collection}")
+    return response.json()
+
+
+def get_populate() -> Dict[str, List[Dict[str, str]]]:
     """
     Gets the layers for front-end to populate the menu.
     :return: Returns a json file containing layer information.
