@@ -78,16 +78,16 @@ def get_point(point: tuple,
     :param root_dir: directory default='/data/layers_to_display/'
     :return: json response of filtered layers available at a given point
     """
-    if not isinstance(point, tuple):
+    if not isinstance(point, tuple):  # if point is not a tuple raise new value error
         raise ValueError('point must be of type tuple (latitude, longitude)')
-    if not len(point) == 2:
+    if not len(point) == 2:  # if point is not of length two raise new value error
         raise ValueError('point must be of format (latitude, longitude)')
-    if point[0] < -180 or point[1] > 180:
+    if point[0] < -180 or point[1] > 180:  # if latitude is out of bounds raise new value error
         raise ValueError('latitude must be between [-180.0000, 180.0000] degrees')
-    if point[1] < -90 or point[0] > 90:
+    if point[1] < -90 or point[0] > 90:  # if longitude is out of bounds raise new value error
         raise ValueError('longitude must be between [-90.0000, 90.0000] degrees')
 
-    if len(regex) > 0:
+    if len(regex) > 0:  # if regex is used include it
         response = requests.get(f'https://api.openlandmap.org/query/point?'
                                 f'lon=lon{point[1]}&'
                                 f'lat=lat{point[0]}&'
@@ -102,7 +102,7 @@ def get_point(point: tuple,
                                 f'version={version}&'
                                 f'regex={regex}&'
                                 f'root_dir={root_dir}')
-    else:
+    else:   # otherwise omit regex from the query
         response = requests.get(f'https://api.openlandmap.org/query/point?'
                                 f'lon=lon{point[1]}&'
                                 f'lat=lat{point[0]}&'
