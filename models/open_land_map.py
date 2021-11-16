@@ -47,3 +47,73 @@ def get_populate() -> Dict[str, List[Dict[str, str]]]:
     """
     response = requests.get("https://api.openlandmap.org/query/populate")
     return response.json()
+
+
+def get_point(point: tuple,
+              coll: str = 'layers250m',
+              code: str = '(.*)',
+              variable: str = '(.*)',
+              procedure: str = '(.*)',
+              probability: str = '(.*)',
+              resolution: str = '(.*)',
+              depth: str = '(.*)',
+              time: str = '(.*)',
+              version: str = '(.*)',
+              regex: str = '',
+              root_dir: str = '/data/layers_to_display/') -> requests.models.Response:
+    """
+    gets all layers at a point given filters
+    :param point: a point of format (latitude, longitude) required
+    :param coll: a collection of layers. default='layers250m'
+    :param code: theme code. default='(.*)'
+    :param variable: generic variable name. default='(.*)'
+    :param procedure: variable procedure combination (standard abbreviation). default='(.*)'
+    :param probability: position in the probability distribution / variable type. default='(.*)'
+    :param resolution: resolution. default='(.*)'
+    :param depth: depth reference or depth interval
+                  e.g. “b0..10cm” below ("b"), above ("a") ground or ("s") default='(.*)'
+    :param time: time reference default='(.*)'
+    :param version: version of the map (major release - update - bug fix) default='(.*)'
+    :param regex: regular expression or string default=''
+    :param root_dir: directory default='/data/layers_to_display/'
+    :return: json response of filtered layers available at a given point
+    """
+    if not isinstance(point, tuple):
+        raise ValueError('point must be of type tuple (latitude, longitude)')
+    if not len(point) == 2:
+        raise ValueError('point must be of format (latitude, longitude)')
+    if point[0] < -180 or point[1] > 180:
+        raise ValueError('latitude must be between [-180.0000, 180.0000] degrees')
+    if point[1] < -90 or point[0] > 90:
+        raise ValueError('longitude must be between [-90.0000, 90.0000] degrees')
+
+    if len(regex) > 0:
+        response = requests.get(f'https://api.openlandmap.org/query/point?'
+                                f'lon=lon{point[1]}&'
+                                f'lat=lat{point[0]}&'
+                                f'coll={coll}&'
+                                f'code={code}&'
+                                f'variable={variable}&'
+                                f'procedure={procedure}&'
+                                f'probability={probability}&'
+                                f'resolution={resolution}&'
+                                f'depth={depth}&'
+                                f'time={time}&'
+                                f'version={version}&'
+                                f'regex={regex}&'
+                                f'root_dir={root_dir}')
+    else:
+        response = requests.get(f'https://api.openlandmap.org/query/point?'
+                                f'lon=lon{point[1]}&'
+                                f'lat=lat{point[0]}&'
+                                f'coll={coll}&'
+                                f'code={code}&'
+                                f'variable={variable}&'
+                                f'procedure={procedure}&'
+                                f'probability={probability}&'
+                                f'resolution={resolution}&'
+                                f'depth={depth}&'
+                                f'time={time}&'
+                                f'version={version}&'
+                                f'root_dir={root_dir}')
+    return response.json()
