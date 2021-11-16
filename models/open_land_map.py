@@ -78,8 +78,8 @@ def get_point(point: tuple,
     :param root_dir: directory default='/data/layers_to_display/'
     :return: json response of filtered layers available at a given point
     """
-    if not isinstance(point, tuple):  # if point is not a tuple raise new value error
-        raise ValueError('point must be of type tuple (latitude, longitude)')
+    if not isinstance(point, tuple):  # if point is not a tuple raise new type error
+        raise TypeError('point must be of type tuple (latitude, longitude)')
     if not len(point) == 2:  # if point is not of length two raise new value error
         raise ValueError('point must be of format (latitude, longitude)')
     if point[0] < -180 or point[1] > 180:  # if latitude is out of bounds raise new value error
@@ -116,4 +116,9 @@ def get_point(point: tuple,
                                 f'time={time}&'
                                 f'version={version}&'
                                 f'root_dir={root_dir}')
-    return response.json()
+
+    if response.status_code == 200:  # if query was successful return json of response body
+        return response.json()
+    else:  # if query was not successful return ConnectionRefusedError
+        raise ConnectionRefusedError('There was an error when querying a point, please ensure all arguments other'
+                                     'than point is a string. Status code:', response.status_code)
