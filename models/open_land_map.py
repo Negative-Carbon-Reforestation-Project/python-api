@@ -8,36 +8,21 @@ def get_collections() -> List[str]:
     :return: Returns a list of the available collections.
     """
     response = requests.get("https://api.openlandmap.org/query/collections")
-    return response.json()
+    if response.status_code == 200:  # if query was successful return json of response body
+        return response.json()
+    else:  # if query was not successful return ConnectionRefusedError
+        raise ConnectionRefusedError(f'There was an error when querying a collection, please check your '
+                                     f'internet connection. Status code: {response.status_code}')
 
 
-def get_layers(collection) -> Dict[str, List[Dict[str, str]]]:
-    """
-    Gets the layers that are available for a given 'collection' or list of 'collection's.
-    :param: A string or list that will be appended to the end of query url, used to specify the target collection
-    :returns: If 'collection' is a string, Returns a list containing a single json file containing the information for the provided layer. \
-        If 'collection' is empty or not a string, Returns a list containing a single json that contains all layers. If 'collection' is a list, \
-        a list of json objects is returned
-    """
-    if isinstance(collection, list):
-        responses = []
-        for item in list:
-            response = requests.get('https://api.openlandmap.org/query/layers?coll={}'.format(item))
-            responses.append(response.json())
-        return responses
-
-    if isinstance(collection, str) and collection:
-        response = requests.get('https://api.openlandmap.org/query/layers?coll={}'.format(collection))
-
-    else:
-        response = requests.get('https://api.openlandmap.org/query/layers?coll=all')
-
-    return response.json()
-
-
-def get_layers2(collection: str = "all") -> Dict[str, List[Dict[str, str]]]:
+def get_layers(collection: str = "all") -> Dict[str, List[Dict[str, str]]]:
     response = requests.get(f"https://api.openlandmap.org/query/layers?coll={collection}")
-    return response.json()
+    if response.status_code == 200:  # if query was successful return json of response body
+        return response.json()
+    else:  # if query was not successful return ConnectionRefusedError
+        raise ConnectionRefusedError(f'There was an error when getting a layer, please ensure collection is a string '
+                                     f'expected by the API and that you are connected to the internet. '
+                                     f'Status code: {response.status_code}')
 
 
 def get_populate() -> Dict[str, List[Dict[str, str]]]:
@@ -46,7 +31,12 @@ def get_populate() -> Dict[str, List[Dict[str, str]]]:
     :return: Returns a json file containing layer information.
     """
     response = requests.get("https://api.openlandmap.org/query/populate")
-    return response.json()
+    if response.status_code == 200:  # if query was successful return json of response body
+        return response.json()
+    else:  # if query was not successful return ConnectionRefusedError
+        raise ConnectionRefusedError(f'There was an error when getting populate, '
+                                     f'make sure you are connected to the internet '
+                                     f'Status code: {response.status_code}')
 
 
 def get_point(point: tuple,
@@ -82,6 +72,8 @@ def get_point(point: tuple,
         raise TypeError('point must be of type tuple (latitude, longitude)')
     if not len(point) == 2:  # if point is not of length two raise new value error
         raise ValueError('point must be of format (latitude, longitude)')
+    if not isinstance(point[0], float) and isinstance(point[1], float):  # if point is not a float raise new value error
+        raise ValueError('point values must be of type float (latitude: float, longitude: float)')
     if point[0] < -180 or point[1] > 180:  # if latitude is out of bounds raise new value error
         raise ValueError('latitude must be between [-180.0000, 180.0000] degrees')
     if point[1] < -90 or point[0] > 90:  # if longitude is out of bounds raise new value error
@@ -102,7 +94,7 @@ def get_point(point: tuple,
                                 f'version={version}&'
                                 f'regex={regex}&'
                                 f'root_dir={root_dir}')
-    else:   # otherwise omit regex from the query
+    else:  # otherwise omit regex from the query
         response = requests.get(f'https://api.openlandmap.org/query/point?'
                                 f'lon=lon{point[1]}&'
                                 f'lat=lat{point[0]}&'
@@ -120,5 +112,6 @@ def get_point(point: tuple,
     if response.status_code == 200:  # if query was successful return json of response body
         return response.json()
     else:  # if query was not successful return ConnectionRefusedError
-        raise ConnectionRefusedError('There was an error when querying a point, please ensure all arguments other'
-                                     'than point is a string. Status code:', response.status_code)
+        raise ConnectionRefusedError(f'There was an error when querying a point, please ensure all arguments other '
+                                     f'than point is a string expected by the API. '
+                                     f'Status code: {response.status_code}')
